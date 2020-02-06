@@ -25,7 +25,8 @@ import {
 } from "./TechniqueParams";
 
 import { Expr, JsonExpr } from "./Expr";
-import { InterpolatedProperty, InterpolatedPropertyDefinition } from "./InterpolatedPropertyDefs";
+import { InterpolatedProperty } from "./InterpolatedProperty";
+import { InterpolatedPropertyDefinition } from "./InterpolatedPropertyDefs";
 import {
     AttrScope,
     mergeTechniqueDescriptor,

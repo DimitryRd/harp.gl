@@ -6,8 +6,11 @@
 
 import { LoggerManager } from "@here/harp-utils";
 import { Env, Expr, ExprScope, MapEnv, Value } from "./Expr";
-import { getPropertyValue, isInterpolatedProperty } from "./InterpolatedProperty";
-import { InterpolatedProperty } from "./InterpolatedPropertyDefs";
+import {
+    getPropertyValue,
+    InterpolatedProperty,
+    isInterpolatedProperty
+} from "./InterpolatedProperty";
 
 const logger = LoggerManager.instance.create("TechniqueAttr");
 
