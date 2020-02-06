@@ -11,6 +11,9 @@ export function chainCallbacks<T extends (this: unknown, ...args: any[]) => any>
     f1: T | null | undefined,
     f2: T
 ): T {
+    if (!f1) {
+        return f2;
+    }
     return function(this: any, ...args: any[]): ReturnType<T> {
         if (f1) {
             f1.apply(this, args);

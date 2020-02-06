@@ -4,7 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DecodedTile, GeometryType, IndexedTechnique } from "@here/harp-datasource-protocol";
+import {
+    DecodedTile,
+    GeometryType,
+    IndexedTechnique,
+    MapEnv
+} from "@here/harp-datasource-protocol";
 import { ViewRanges } from "@here/harp-datasource-protocol/lib/ViewRanges";
 import {
     mercatorProjection,
@@ -18,11 +23,20 @@ import * as THREE from "three";
 import { DataSource } from "../lib/DataSource";
 import { DisplacementMap } from "../lib/DisplacementMap";
 import { TileGeometryCreator } from "../lib/geometry/TileGeometryCreator";
+import { TechniqueUpdateContext } from "../lib/techniques/TechniqueHandler";
 import { Tile } from "../lib/Tile";
 
 class FakeMapView {
     private m_scene = new THREE.Scene();
 
+    get techniqueUpdateContext(): TechniqueUpdateContext {
+        return {
+            viewRanges: this.viewRanges,
+            env: new MapEnv({ $zoom: this.zoomLevel }),
+            frameNumber: 0,
+            projection: mercatorProjection
+        };
+    }
     get zoomLevel(): number {
         return 0;
     }

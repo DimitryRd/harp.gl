@@ -187,10 +187,13 @@ export class AnimatedExtrusionTileHandler {
     }
 
     /**
-     * Set an extrusion ratio value for the materials [[MapMeshBasicMaterial]]
+     * Extrusion ratio value for the materials [[MapMeshBasicMaterial]]
      * and [[EdgeMaterial]]. Controlled by [[AnimatedExtrusionHandler]]
      * for extrusion animation effect.
      */
+    get extrusionRatio() {
+        return this.m_animatedExtrusionRatio;
+    }
     set extrusionRatio(value: number) {
         this.m_animatedExtrusionRatio = value;
 

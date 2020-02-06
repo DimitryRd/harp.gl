@@ -20,6 +20,8 @@ import { TileGeometryLoader } from "./geometry/TileGeometryLoader";
 import { MapView } from "./MapView";
 import { PathBlockingElement } from "./PathBlockingElement";
 import { PerformanceStatistics } from "./Statistics";
+import { TechniqueHandler, TechniqueUpdateContext } from "./techniques/TechniqueHandler";
+import { TechniqueHandlerPool } from "./techniques/TechniqueHandlerPool";
 import { TextElement } from "./text/TextElement";
 import { TextElementGroup } from "./text/TextElementGroup";
 import { TextElementGroupPriorityList } from "./text/TextElementGroupPriorityList";
@@ -336,6 +338,8 @@ export class Tile implements CachedResource {
      */
     preparedTextPaths: TextPathGeometry[] | undefined;
 
+    dynamicTechniqueHandlers: Array<TechniqueHandler<Technique>> = [];
+
     /**
      * @hidden
      *
@@ -434,6 +438,9 @@ export class Tile implements CachedResource {
         return this.dataSource.mapView;
     }
 
+    get techniqueHandlerPool(): TechniqueHandlerPool {
+        return this.mapView.techniqueHandlerPool;
+    }
     /**
      * Whether the data of this tile is in local tangent space or not.
      * If the data is in local tangent space (i.e. up vector is (0,0,1) for high zoomlevels) then
@@ -651,6 +658,17 @@ export class Tile implements CachedResource {
      */
     didRender(): void {
         // to be overridden by subclasses
+    }
+
+    /**
+     * Update dynamic tile objects that depend on dynamic technique attributes.
+     *
+     * In particular (materials, scene objects, [[TextElement]]s).
+     */
+    updateDynamicTechniques(context: TechniqueUpdateContext): void {
+        for (const techniqueHandler of this.dynamicTechniqueHandlers) {
+            techniqueHandler.update(context);
+        }
     }
 
     /**
@@ -960,6 +978,7 @@ export class Tile implements CachedResource {
             disposeObject(rootObject);
         });
         this.objects.length = 0;
+        this.dynamicTechniqueHandlers.length = 0;
 
         if (this.preparedTextPaths) {
             this.preparedTextPaths = [];
