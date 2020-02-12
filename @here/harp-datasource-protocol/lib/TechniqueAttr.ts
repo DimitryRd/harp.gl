@@ -6,11 +6,6 @@
 
 import { LoggerManager } from "@here/harp-utils";
 import { Env, Expr, ExprScope, MapEnv, Value } from "./Expr";
-import {
-    getPropertyValue,
-    InterpolatedProperty,
-    isInterpolatedProperty
-} from "./InterpolatedProperty";
 
 const logger = LoggerManager.instance.create("TechniqueAttr");
 
@@ -49,7 +44,7 @@ export interface AttrEvaluationContext {
  */
 export function evaluateTechniqueAttr<T = Value>(
     context: Env | AttrEvaluationContext,
-    attrValue: T | Expr | InterpolatedProperty | undefined
+    attrValue: T | Expr | undefined
 ): T | undefined;
 
 /**
@@ -59,13 +54,13 @@ export function evaluateTechniqueAttr<T = Value>(
  */
 export function evaluateTechniqueAttr<T = Value>(
     context: Env | AttrEvaluationContext,
-    attrValue: T | Expr | InterpolatedProperty | undefined,
+    attrValue: T | Expr | undefined,
     defaultValue: T
 ): T;
 
 export function evaluateTechniqueAttr<T = Value>(
     context: Env | AttrEvaluationContext,
-    attrValue: T | Expr | InterpolatedProperty | undefined,
+    attrValue: T | Expr | undefined,
     defaultValue?: T
 ): T | undefined {
     const env = context instanceof Env ? context : context.env;
@@ -82,8 +77,6 @@ export function evaluateTechniqueAttr<T = Value>(
             logger.error(`failed to evaluate expression '${JSON.stringify(attrValue)}': ${error}`);
             evaluated = undefined;
         }
-    } else if (isInterpolatedProperty(attrValue)) {
-        evaluated = getPropertyValue(attrValue, context instanceof Env ? context : context.env);
     } else {
         evaluated = (attrValue as unknown) as Value;
     }

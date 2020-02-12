@@ -25,7 +25,6 @@ import {
 } from "./TechniqueParams";
 
 import { Expr, JsonExpr } from "./Expr";
-import { InterpolatedProperty } from "./InterpolatedProperty";
 import { InterpolatedPropertyDefinition } from "./InterpolatedPropertyDefs";
 import {
     AttrScope,
@@ -67,7 +66,7 @@ export type RemoveJsonExpr<T> = T | JsonExpr extends T ? Exclude<T, JsonExpr> : 
  */
 export type MakeTechniqueAttrs<T> = {
     [P in keyof T]: T[P] | JsonExpr extends T[P]
-        ? RemoveInterpolatedPropDef<RemoveJsonExpr<T[P]>> | Expr | InterpolatedProperty
+        ? RemoveInterpolatedPropDef<RemoveJsonExpr<T[P]>> | Expr
         : T[P];
 };
 

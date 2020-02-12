@@ -101,16 +101,9 @@ export function isInterpolatedProperty(p: any): p is InterpolatedProperty {
 * @param property Property of a technique.
 * @param env The [[Env]] used to evaluate the property
 */
-export function getPropertyValue(
-    property: Value | Expr | InterpolatedProperty | undefined,
-    env: Env
-): any {
+export function getPropertyValue(property: Value | Expr | undefined, env: Env): any {
     if (Expr.isExpr(property)) {
         return property.evaluate(env, ExprScope.Dynamic);
-    }
-
-    if (isInterpolatedProperty(property)) {
-        return evaluateInterpolatedProperty(property, env);
     }
 
     if (typeof property !== "string") {
