@@ -286,278 +286,278 @@ describe("Rendering lines: ", function() {
         await renderLines(linesConfig, this, "solid-lines-1px", lineStyle);
     });
 
-    // it("renders undisplaced solid lines - perspective camera", async function(this: Mocha.Context) {
-    //     const config = displacedLinesConfig;
-    //     const { width, height } = getCanvasSize(config);
-    //     const camera = createPerspectiveCamera(width, height);
+    it("renders undisplaced solid lines - perspective camera", async function(this: Mocha.Context) {
+        const config = displacedLinesConfig;
+        const { width, height } = getCanvasSize(config);
+        const camera = createPerspectiveCamera(width, height);
 
-    //     const lineStyle = {
-    //         lineWidth: 1,
-    //         color: "#FFF"
-    //     };
-    //     await renderLines(config, this, "undisplaced-solid-lines-persective", lineStyle, camera);
-    // });
+        const lineStyle = {
+            lineWidth: 1,
+            color: "#FFF"
+        };
+        await renderLines(config, this, "undisplaced-solid-lines-persective", lineStyle, camera);
+    });
 
-    // it("renders displaced solid lines - perspective camera", async function(this: Mocha.Context) {
-    //     const config = displacedLinesConfig;
-    //     const { width, height } = getCanvasSize(config);
-    //     const camera = createPerspectiveCamera(width, height);
+    it("renders displaced solid lines - perspective camera", async function(this: Mocha.Context) {
+        const config = displacedLinesConfig;
+        const { width, height } = getCanvasSize(config);
+        const camera = createPerspectiveCamera(width, height);
 
-    //     const displacementMap: THREE.Texture = createFakeDisplacementMap(cellSize);
-    //     const lineStyle = {
-    //         lineWidth: 1,
-    //         color: "#FFF",
-    //         displacementMap
-    //     };
-    //     await renderLines(config, this, "displaced-solid-lines-persective", lineStyle, camera);
-    // });
+        const displacementMap: THREE.Texture = createFakeDisplacementMap(cellSize);
+        const lineStyle = {
+            lineWidth: 1,
+            color: "#FFF",
+            displacementMap
+        };
+        await renderLines(config, this, "displaced-solid-lines-persective", lineStyle, camera);
+    });
 
-    // it("renders solid lines - lineWidth: 20", async function(this: Mocha.Context) {
-    //     const lineStyle = { lineWidth: 20, color: "#FFF" };
-    //     await renderLines(linesConfig, this, "solid-lines-20px", lineStyle);
-    // });
+    it("renders solid lines - lineWidth: 20", async function(this: Mocha.Context) {
+        const lineStyle = { lineWidth: 20, color: "#FFF" };
+        await renderLines(linesConfig, this, "solid-lines-20px", lineStyle);
+    });
 
-    // it("renders solid lines with outline - outlineWidth: 5", async function(this: Mocha.Context) {
-    //     const lineStyle = { lineWidth: 10, color: "#F00", outlineWidth: 5, outlineColor: "#0F0" };
-    //     await renderLines(linesConfig, this, "solid-lines-outline", lineStyle);
-    // });
+    it("renders solid lines with outline - outlineWidth: 5", async function(this: Mocha.Context) {
+        const lineStyle = { lineWidth: 10, color: "#F00", outlineWidth: 5, outlineColor: "#0F0" };
+        await renderLines(linesConfig, this, "solid-lines-outline", lineStyle);
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines with outline - outlineWidth: 3, dashSize: 4", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 4,
-    //         color: "#F00",
-    //         gapSize: 4,
-    //         dashSize: 4,
-    //         dashColor: "#00F",
-    //         outlineWidth: 3,
-    //         outlineColor: "#0F0"
-    //     };
-    //     await renderLines(linesConfig, this, "dashed-lines-outline", lineStyle);
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines with outline - outlineWidth: 3, dashSize: 4", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 4,
+            color: "#F00",
+            gapSize: 4,
+            dashSize: 4,
+            dashColor: "#00F",
+            outlineWidth: 3,
+            outlineColor: "#0F0"
+        };
+        await renderLines(linesConfig, this, "dashed-lines-outline", lineStyle);
+    });
 
-    // it("renders dashed lines with outline - transparent", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 4,
-    //         color: "#F00",
-    //         gapSize: 4,
-    //         dashSize: 4,
-    //         outlineWidth: 3,
-    //         outlineColor: "#0F0"
-    //     };
-    //     await renderLines(linesConfig, this, "dashed-lines-outline-alpha", lineStyle);
-    // });
+    it("renders dashed lines with outline - transparent", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 4,
+            color: "#F00",
+            gapSize: 4,
+            dashSize: 4,
+            outlineWidth: 3,
+            outlineColor: "#0F0"
+        };
+        await renderLines(linesConfig, this, "dashed-lines-outline-alpha", lineStyle);
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines - lineWidth: 1, gapSize: 2, dashSize: 2", async function(this: Mocha.Context) {
-    //     const lineStyle = { lineWidth: 1, color: "#FFF", gapSize: 2, dashSize: 2 };
-    //     await renderLines(linesConfig, this, "dashed-lines-1px", lineStyle);
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines - lineWidth: 1, gapSize: 2, dashSize: 2", async function(this: Mocha.Context) {
+        const lineStyle = { lineWidth: 1, color: "#FFF", gapSize: 2, dashSize: 2 };
+        await renderLines(linesConfig, this, "dashed-lines-1px", lineStyle);
+    });
 
-    // it("renders dashed lines with dashColor: #F00", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 1,
-    //         color: "#FFF",
-    //         gapSize: 2,
-    //         dashSize: 2,
-    //         dashColor: "#0F0"
-    //     };
-    //     await renderLines(linesConfig, this, "dashed-lines-color", lineStyle);
-    // });
+    it("renders dashed lines with dashColor: #F00", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 1,
+            color: "#FFF",
+            gapSize: 2,
+            dashSize: 2,
+            dashColor: "#0F0"
+        };
+        await renderLines(linesConfig, this, "dashed-lines-color", lineStyle);
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines - lineWidth: 20,gapSize: 2, dashSize: 2", async function(this: Mocha.Context) {
-    //     const lineStyle = { lineWidth: 20, color: "#FFF", gapSize: 2, dashSize: 2 };
-    //     await renderLines(linesConfig, this, "dashed-lines-20px", lineStyle);
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines - lineWidth: 20,gapSize: 2, dashSize: 2", async function(this: Mocha.Context) {
+        const lineStyle = { lineWidth: 20, color: "#FFF", gapSize: 2, dashSize: 2 };
+        await renderLines(linesConfig, this, "dashed-lines-20px", lineStyle);
+    });
 
-    // it("renders solid lines - overdraw check", async function(this: Mocha.Context) {
-    //     const lineStyle = { lineWidth: 20, color: "#FFF", opacity: 0.5, transparent: true };
-    //     await renderLines(checkOverDrawLines, this, "solid-lines-overdraw-20px", lineStyle);
-    // });
+    it("renders solid lines - overdraw check", async function(this: Mocha.Context) {
+        const lineStyle = { lineWidth: 20, color: "#FFF", opacity: 0.5, transparent: true };
+        await renderLines(checkOverDrawLines, this, "solid-lines-overdraw-20px", lineStyle);
+    });
 
-    // it("renders dashed lines - overdraw check", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         gapSize: 2,
-    //         dashSize: 2
-    //     };
-    //     await renderLines(checkOverDrawLines, this, "dashed-lines-overdraw-20px", lineStyle);
-    // });
+    it("renders dashed lines - overdraw check", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            gapSize: 2,
+            dashSize: 2
+        };
+        await renderLines(checkOverDrawLines, this, "dashed-lines-overdraw-20px", lineStyle);
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines with round dashes - no outline, dashSize: 16", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         dashes: "Round",
-    //         lineWidth: 8,
-    //         color: "#F00",
-    //         gapSize: 16,
-    //         dashSize: 16,
-    //         dashColor: "#00F"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "dashed-lines-round-no-outline",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines with round dashes - no outline, dashSize: 16", async function(this: Mocha.Context) {
+        const lineStyle = {
+            dashes: "Round",
+            lineWidth: 8,
+            color: "#F00",
+            gapSize: 16,
+            dashSize: 16,
+            dashColor: "#00F"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "dashed-lines-round-no-outline",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines with round dashes - outlineWidth: 3, dashSize: 16", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         dashes: "Round",
-    //         lineWidth: 8,
-    //         color: "#F00",
-    //         gapSize: 16,
-    //         dashSize: 16,
-    //         dashColor: "#00F",
-    //         outlineWidth: 3,
-    //         outlineColor: "#0F0"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "dashed-lines-round-outline",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines with round dashes - outlineWidth: 3, dashSize: 16", async function(this: Mocha.Context) {
+        const lineStyle = {
+            dashes: "Round",
+            lineWidth: 8,
+            color: "#F00",
+            gapSize: 16,
+            dashSize: 16,
+            dashColor: "#00F",
+            outlineWidth: 3,
+            outlineColor: "#0F0"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "dashed-lines-round-outline",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines with diamond dashes - no outline, dashSize: 16", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         dashes: "Diamond",
-    //         lineWidth: 8,
-    //         color: "#F00",
-    //         gapSize: 16,
-    //         dashSize: 16,
-    //         dashColor: "#00F"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "dashed-lines-diamond-no-outline",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines with diamond dashes - no outline, dashSize: 16", async function(this: Mocha.Context) {
+        const lineStyle = {
+            dashes: "Diamond",
+            lineWidth: 8,
+            color: "#F00",
+            gapSize: 16,
+            dashSize: 16,
+            dashColor: "#00F"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "dashed-lines-diamond-no-outline",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // // tslint:disable-next-line: max-line-length
-    // it("renders dashed lines w/ diamond dashes - outlineWidth: 3, dashSize: 16", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         dashes: "Diamond",
-    //         lineWidth: 8,
-    //         color: "#F00",
-    //         gapSize: 16,
-    //         dashSize: 16,
-    //         dashColor: "#00F",
-    //         outlineWidth: 3,
-    //         outlineColor: "#0F0"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "dashed-lines-diamond-outline",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    // tslint:disable-next-line: max-line-length
+    it("renders dashed lines w/ diamond dashes - outlineWidth: 3, dashSize: 16", async function(this: Mocha.Context) {
+        const lineStyle = {
+            dashes: "Diamond",
+            lineWidth: 8,
+            color: "#F00",
+            gapSize: 16,
+            dashSize: 16,
+            dashColor: "#00F",
+            outlineWidth: 3,
+            outlineColor: "#0F0"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "dashed-lines-diamond-outline",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders dashed lines with stretched diamond dashes", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         dashes: "Diamond",
-    //         lineWidth: 8,
-    //         color: "#F00",
-    //         gapSize: 0.01,
-    //         dashSize: 32,
-    //         dashColor: "#00F"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "dashed-lines-diamond-stretched",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders dashed lines with stretched diamond dashes", async function(this: Mocha.Context) {
+        const lineStyle = {
+            dashes: "Diamond",
+            lineWidth: 8,
+            color: "#F00",
+            gapSize: 0.01,
+            dashSize: 32,
+            dashColor: "#00F"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "dashed-lines-diamond-stretched",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders solid lines - caps check round", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         caps: "Round"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "solid-lines-caps-round-20px",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders solid lines - caps check round", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            caps: "Round"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "solid-lines-caps-round-20px",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders solid lines - caps check none", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         caps: "None"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "solid-lines-caps-none-20px",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders solid lines - caps check none", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            caps: "None"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "solid-lines-caps-none-20px",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders solid lines - caps check square", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         caps: "Square"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "solid-lines-caps-square-20px",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders solid lines - caps check square", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            caps: "Square"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "solid-lines-caps-square-20px",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders solid lines - caps check triangle out", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         caps: "TriangleOut"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "solid-lines-caps-triangle-out-20px",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders solid lines - caps check triangle out", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            caps: "TriangleOut"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "solid-lines-caps-triangle-out-20px",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 
-    // it("renders solid lines - caps check triangle in", async function(this: Mocha.Context) {
-    //     const lineStyle = {
-    //         lineWidth: 20,
-    //         color: "#FFF",
-    //         opacity: 0.5,
-    //         transparent: true,
-    //         caps: "TriangleIn"
-    //     };
-    //     await renderLines(
-    //         linesConfig,
-    //         this,
-    //         "solid-lines-caps-triangle-in-20px",
-    //         lineStyle as SolidLineMaterialParameters
-    //     );
-    // });
+    it("renders solid lines - caps check triangle in", async function(this: Mocha.Context) {
+        const lineStyle = {
+            lineWidth: 20,
+            color: "#FFF",
+            opacity: 0.5,
+            transparent: true,
+            caps: "TriangleIn"
+        };
+        await renderLines(
+            linesConfig,
+            this,
+            "solid-lines-caps-triangle-in-20px",
+            lineStyle as SolidLineMaterialParameters
+        );
+    });
 });

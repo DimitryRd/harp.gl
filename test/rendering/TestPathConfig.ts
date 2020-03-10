@@ -13,7 +13,7 @@ import { LoggerManager } from "@here/harp-utils";
 
 const logger = LoggerManager.instance.create("TestPathConfig");
 
-const REF_PLATFORM = "ChromeHeadless-79.0.3945.88-Linux";
+const REF_PLATFORM = "ChromeHeadless-80.0.3987.106-Linux";
 // tslint:disable-next-line:no-var-requires
 const referenceData = require(`../../test/rendering/${REF_PLATFORM}.ref.json`);
 // tslint:disable-next-line:no-var-requires

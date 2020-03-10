@@ -55,7 +55,9 @@ async function fetchReferenceImages() {
 
 export async function approveReferenceImages(platform: string) {
     // reference-images should be already fetched from referenceRepo
+    console.log(`>>>>>>${referenceOutputPath}/${platform}.ref.json`);
     const referenceJson: RefData = await loadRefFile(`${referenceOutputPath}/${platform}.ref.json`);
+    console.log('referenceJson: ', referenceJson);
     for (const name of Object.keys(referenceJson)) {
         const hash = referenceJson[name];
         const sourcePath = path.join(referenceImagesPath, `${hash}.png`);
@@ -155,7 +157,9 @@ export async function updateReferenceImagesLocal(platform: string, createRef: bo
 async function pushReferenceImages() {
     const commitMessage = "Upload ref images";
     const out = await execCommandWithCapture(`git ls-files --others`, referenceMainDir);
+    console.log('out: ', out);
     const files = out.split("\n").filter(name => name);
+    console.log('files: ', files);
     if (files.length) {
         logger.log(`${files.length} image(s) changed`);
         await execCommand(`git status`, referenceMainDir);
@@ -241,6 +245,7 @@ async function readImage(filePath: string): Promise<ImageData> {
 
 async function loadRefFile(filePath: string) {
     const content = fs.readFileSync(filePath, "utf-8");
+    console.log('content: ', content);
     return JSON.parse(content);
 }
 
@@ -289,7 +294,9 @@ async function main() {
                 let platforms: string[];
                 await fetchReferenceImages();
                 if (fs.existsSync(testResultsPath)) {
+                    console.log('testResultsPath: ', testResultsPath);
                     platforms = await getDirectories(testResultsPath);
+                    console.log('platforms: ', platforms);
                 } else {
                     throw new Error(`DIRECTORY ${testResultsPath} NOT FOUND`);
                 }
@@ -383,12 +390,13 @@ function commandErrorHandler(action: () => Promise<void>): () => void {
                 process.exit(exitCode);
             }
         } catch (e) {
+            console.log('e: ', e);
             process.exit(3);
         }
     };
 }
 
 main().catch(error => {
-    logger.log("Error occured in ReferenceImageData: ", error);
+    logger.log("Error occurred in ReferenceImageData: ", error);
     process.exit(2);
 });

@@ -4,6 +4,9 @@ node_js:
   - '10'
 cache:
   yarn: true
+  directories:
+    - "node_modules"
+    - "dist/test"
 
 addons:
   chrome: stable
@@ -30,14 +33,17 @@ jobs:
   include:
     - name: Test
       script:
-        - set -ex
         - yarn
         # - yarn pre-test
         # - yarn cov-test --forbid-only
         - yarn build-tests
         # - yarn test --headless-chrome
+        - yarn test-rendering-tests --headless-chrome
+        - yarn check-platform-update-reference-data || true
+        - yarn check-platform-update-reference-data
         - yarn get-reference-images-rendering-tests
         - yarn test-rendering-tests --headless-chrome
+        - yarn push-reference-rendering-tests
         - git status
 
     - name: Build & Deploy

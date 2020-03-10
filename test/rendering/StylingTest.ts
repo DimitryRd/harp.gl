@@ -215,169 +215,169 @@ describe("MapView Styling Test", function() {
         ]
     };
 
-    // describe("point features", function() {
-    //     const points: Feature[] = [
-    //         {
-    //             type: "Feature",
-    //             geometry: {
-    //                 type: "Point",
-    //                 coordinates: [0.003, 0.001]
-    //             },
-    //             properties: {
-    //                 name: "aBcD"
-    //             }
-    //         },
-    //         {
-    //             type: "Feature",
-    //             geometry: {
-    //                 type: "Point",
-    //                 coordinates: [-0.003, 0.001]
-    //             },
-    //             properties: {
-    //                 name: "aBcD"
-    //             }
-    //         },
-    //         {
-    //             type: "Feature",
-    //             geometry: {
-    //                 type: "Point",
-    //                 coordinates: [0.0, -0.002]
-    //             },
-    //             properties: {
-    //                 name: "aBcD"
-    //             }
-    //         }
-    //     ];
-    //     function makePointTextTestCases(
-    //         testCases: { [name: string]: TextTechniqueStyle["attr"] },
-    //         options?: Partial<GeoJsonMapViewRenderingTestOptions>
-    //     ) {
-    //         // tslint:disable-next-line:forin
-    //         for (const testCase in testCases) {
-    //             const attr: TextTechniqueStyle["attr"] = testCases[testCase]!;
-    //             mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [
-    //                         // tested horizontal line
-    //                         ...points,
-    //                         referenceBackground
-    //                     ]
-    //                 },
-    //                 theme: {
-    //                     ...themeTextSettings,
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'point'",
-    //                                 technique: "text",
-    //                                 attr
-    //                             }
-    //                         ]
-    //                     }
-    //                 },
-    //                 ...options
-    //             });
-    //         }
-    //     }
-    //     function makePointTestCases(
-    //         testCases: { [name: string]: CirclesStyle["attr"] },
-    //         options?: Partial<GeoJsonMapViewRenderingTestOptions>
-    //     ) {
-    //         // tslint:disable-next-line:forin
-    //         for (const testCase in testCases) {
-    //             const attr: CirclesStyle["attr"] = testCases[testCase]!;
-    //             mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [
-    //                         // tested horizontal line
-    //                         ...points,
-    //                         referenceBackground
-    //                     ]
-    //                 },
-    //                 theme: {
-    //                     ...themeTextSettings,
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'point'",
-    //                                 technique: "circles",
-    //                                 attr
-    //                             }
-    //                         ]
-    //                     }
-    //                 },
-    //                 ...options
-    //             });
-    //         }
-    //     }
+    describe("point features", function() {
+        const points: Feature[] = [
+            {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0.003, 0.001]
+                },
+                properties: {
+                    name: "aBcD"
+                }
+            },
+            {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [-0.003, 0.001]
+                },
+                properties: {
+                    name: "aBcD"
+                }
+            },
+            {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0.0, -0.002]
+                },
+                properties: {
+                    name: "aBcD"
+                }
+            }
+        ];
+        function makePointTextTestCases(
+            testCases: { [name: string]: TextTechniqueStyle["attr"] },
+            options?: Partial<GeoJsonMapViewRenderingTestOptions>
+        ) {
+            // tslint:disable-next-line:forin
+            for (const testCase in testCases) {
+                const attr: TextTechniqueStyle["attr"] = testCases[testCase]!;
+                mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [
+                            // tested horizontal line
+                            ...points,
+                            referenceBackground
+                        ]
+                    },
+                    theme: {
+                        ...themeTextSettings,
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'point'",
+                                    technique: "text",
+                                    attr
+                                }
+                            ]
+                        }
+                    },
+                    ...options
+                });
+            }
+        }
+        function makePointTestCases(
+            testCases: { [name: string]: CirclesStyle["attr"] },
+            options?: Partial<GeoJsonMapViewRenderingTestOptions>
+        ) {
+            // tslint:disable-next-line:forin
+            for (const testCase in testCases) {
+                const attr: CirclesStyle["attr"] = testCases[testCase]!;
+                mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [
+                            // tested horizontal line
+                            ...points,
+                            referenceBackground
+                        ]
+                    },
+                    theme: {
+                        ...themeTextSettings,
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'point'",
+                                    technique: "circles",
+                                    attr
+                                }
+                            ]
+                        }
+                    },
+                    ...options
+                });
+            }
+        }
 
-    //     describe("text", function() {
-    //         makePointTextTestCases(
-    //             {
-    //                 "point-text-basic": { color: "#f0f", size: 16 },
-    //                 "point-text-rgba": { color: "#f0f9", size: 16 },
-    //                 "point-text-bg-rgba": {
-    //                     color: "#f0f",
-    //                     backgroundSize: 6,
-    //                     backgroundColor: "#0008",
-    //                     size: 16
-    //                 }
-    //             },
-    //             {
-    //                 margin: 0.5
-    //             }
-    //         );
-    //     });
+        describe("text", function() {
+            makePointTextTestCases(
+                {
+                    "point-text-basic": { color: "#f0f", size: 16 },
+                    "point-text-rgba": { color: "#f0f9", size: 16 },
+                    "point-text-bg-rgba": {
+                        color: "#f0f",
+                        backgroundSize: 6,
+                        backgroundColor: "#0008",
+                        size: 16
+                    }
+                },
+                {
+                    margin: 0.5
+                }
+            );
+        });
 
-    //     describe("circles", function() {
-    //         makePointTestCases(
-    //             {
-    //                 "point-circles-basic": { color: "#ca6", size: 10 },
-    //                 "point-circles-rgba": { color: "#ca69", size: 10 },
-    //                 "point-circles-rgb-opacity": { color: "#ca6", opacity: 0.5, size: 10 },
-    //                 "point-circles-rgba-opacity": { color: "#ca69", opacity: 0.5, size: 10 }
-    //             },
-    //             {
-    //                 margin: 0.5
-    //             }
-    //         );
-    //     });
-    // });
-    // describe("line features", function() {
-    //     const straightLine: Feature = {
-    //         type: "Feature",
-    //         geometry: {
-    //             type: "LineString",
-    //             coordinates: [
-    //                 [0.004, 0.001],
-    //                 [-0.004, 0.001]
-    //             ]
-    //         }
-    //     };
-    //     const shortLine: Feature = {
-    //         type: "Feature",
-    //         geometry: {
-    //             type: "LineString",
-    //             coordinates: [
-    //                 [0.004, 0.001],
-    //                 [0.0, 0.001]
-    //             ]
-    //         }
-    //     };
-    //     const diagonalLine: Feature = {
-    //         type: "Feature",
-    //         geometry: {
-    //             type: "LineString",
-    //             coordinates: [
-    //                 [0.004, -0.004],
-    //                 [-0.004, 0.004]
-    //             ]
-    //         }
-    //     };
+        describe("circles", function() {
+            makePointTestCases(
+                {
+                    "point-circles-basic": { color: "#ca6", size: 10 },
+                    "point-circles-rgba": { color: "#ca69", size: 10 },
+                    "point-circles-rgb-opacity": { color: "#ca6", opacity: 0.5, size: 10 },
+                    "point-circles-rgba-opacity": { color: "#ca69", opacity: 0.5, size: 10 }
+                },
+                {
+                    margin: 0.5
+                }
+            );
+        });
+    });
+    describe("line features", function() {
+        const straightLine: Feature = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [
+                    [0.004, 0.001],
+                    [-0.004, 0.001]
+                ]
+            }
+        };
+        const shortLine: Feature = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [
+                    [0.004, 0.001],
+                    [0.0, 0.001]
+                ]
+            }
+        };
+        const diagonalLine: Feature = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [
+                    [0.004, -0.004],
+                    [-0.004, 0.004]
+                ]
+            }
+        };
 
         function makeLineTestCase(
             testCases: { [name: string]: SolidLineStyle["attr"] },
@@ -642,24 +642,24 @@ describe("MapView Styling Test", function() {
             }
         };
 
-    //     function makePolygonTestCases<T extends FillStyle | ExtrudedPolygonStyle>(
-    //         technique: "fill" | "extruded-polygon",
-    //         testCases: {
-    //             [name: string]: T["attr"];
-    //         },
-    //         options?: Partial<GeoJsonMapViewRenderingTestOptions>
-    //     ) {
-    //         let extraFeatures: Feature[] = [];
-    //         if (options && options.geoJson) {
-    //             extraFeatures =
-    //                 options.geoJson.type === "FeatureCollection" ? options.geoJson.features : [];
-    //             options = { ...options };
-    //             delete options.geoJson;
-    //         }
+        function makePolygonTestCases<T extends FillStyle | ExtrudedPolygonStyle>(
+            technique: "fill" | "extruded-polygon",
+            testCases: {
+                [name: string]: T["attr"];
+            },
+            options?: Partial<GeoJsonMapViewRenderingTestOptions>
+        ) {
+            let extraFeatures: Feature[] = [];
+            if (options && options.geoJson) {
+                extraFeatures =
+                    options.geoJson.type === "FeatureCollection" ? options.geoJson.features : [];
+                options = { ...options };
+                delete options.geoJson;
+            }
 
-    //         // tslint:disable-next-line:forin
-    //         for (const testCase in testCases) {
-    //             const attr: T["attr"] = testCases[testCase]!;
+            // tslint:disable-next-line:forin
+            for (const testCase in testCases) {
+                const attr: T["attr"] = testCases[testCase]!;
 
                 mapViewFeaturesRenderingTest(`polygon-styling-${testCase}`, {
                     geoJson: {
@@ -795,92 +795,92 @@ describe("MapView Styling Test", function() {
             );
         });
 
-    //     describe("extruded-polygon technique", function() {
-    //         const tower: Feature = {
-    //             // sample polygon, that is smaller and higher than previous one
-    //             type: "Feature",
-    //             geometry: {
-    //                 type: "Polygon",
-    //                 coordinates: [
-    //                     [
-    //                         [0.002, 0.001],
-    //                         [-0.002, 0.001],
-    //                         [-0.002, -0.001],
-    //                         [0.002, -0.001],
-    //                         [0.002, 0.001]
-    //                     ]
-    //                 ]
-    //             },
-    //             properties: {
-    //                 kind: "tower",
-    //                 height: 400
-    //             }
-    //         };
-    //         const viewOptions = {
-    //             margin: 0.3,
-    //             lookAt: {
-    //                 tilt: 35,
-    //                 azimuth: 30
-    //             }
-    //         };
-    //         describe("flat", function() {
-    //             makePolygonTestCases(
-    //                 "extruded-polygon",
-    //                 {
-    //                     "extruded-polygon-flat": { color: "#0b97c4", height: 0 },
-    //                     "extruded-polygon-flat-rgba": { color: "#0b97c470", height: 0 },
-    //                     "extruded-polygon-flat-rgba-outline": {
-    //                         color: "#0b97c470",
-    //                         height: 0,
-    //                         lineWidth: 1,
-    //                         lineColor: "#aaa"
-    //                     }
-    //                 },
-    //                 viewOptions
-    //             );
-    //         });
-    //         describe("3d", function() {
-    //             makePolygonTestCases(
-    //                 "extruded-polygon",
-    //                 {
-    //                     "extruded-polygon-3d": { color: "#0b97c4" },
-    //                     "extruded-polygon-3d-rgba": {
-    //                         color: "#0b97c480"
-    //                     },
-    //                     "extruded-polygon-3d-rgba-outline": {
-    //                         color: "#0b97c480",
-    //                         lineWidth: 1,
-    //                         lineColorMix: 0,
-    //                         lineColor: "#7f7"
-    //                     }
-    //                 },
-    //                 viewOptions
-    //             );
-    //         });
-    //         describe("3d overlapping", function() {
-    //             makePolygonTestCases(
-    //                 "extruded-polygon",
-    //                 {
-    //                     "extruded-polygon-3d-overlap": { color: "#0b97c4" },
-    //                     "extruded-polygon-3d-overlap-rgba": {
-    //                         color: "#0b97c480"
-    //                     },
-    //                     "extruded-polygon-3d-overlap-rgba-outline": {
-    //                         color: "#0b97c480",
-    //                         lineWidth: 1,
-    //                         lineColorMix: 0,
-    //                         lineColor: "#7f7"
-    //                     }
-    //                 },
-    //                 {
-    //                     geoJson: {
-    //                         type: "FeatureCollection",
-    //                         features: [tower]
-    //                     },
-    //                     ...viewOptions
-    //                 }
-    //             );
-    //         });
-    //     });
-    // });
+        describe("extruded-polygon technique", function() {
+            const tower: Feature = {
+                // sample polygon, that is smaller and higher than previous one
+                type: "Feature",
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [0.002, 0.001],
+                            [-0.002, 0.001],
+                            [-0.002, -0.001],
+                            [0.002, -0.001],
+                            [0.002, 0.001]
+                        ]
+                    ]
+                },
+                properties: {
+                    kind: "tower",
+                    height: 400
+                }
+            };
+            const viewOptions = {
+                margin: 0.3,
+                lookAt: {
+                    tilt: 35,
+                    azimuth: 30
+                }
+            };
+            describe("flat", function() {
+                makePolygonTestCases(
+                    "extruded-polygon",
+                    {
+                        "extruded-polygon-flat": { color: "#0b97c4", height: 0 },
+                        "extruded-polygon-flat-rgba": { color: "#0b97c470", height: 0 },
+                        "extruded-polygon-flat-rgba-outline": {
+                            color: "#0b97c470",
+                            height: 0,
+                            lineWidth: 1,
+                            lineColor: "#aaa"
+                        }
+                    },
+                    viewOptions
+                );
+            });
+            describe("3d", function() {
+                makePolygonTestCases(
+                    "extruded-polygon",
+                    {
+                        "extruded-polygon-3d": { color: "#0b97c4" },
+                        "extruded-polygon-3d-rgba": {
+                            color: "#0b97c480"
+                        },
+                        "extruded-polygon-3d-rgba-outline": {
+                            color: "#0b97c480",
+                            lineWidth: 1,
+                            lineColorMix: 0,
+                            lineColor: "#7f7"
+                        }
+                    },
+                    viewOptions
+                );
+            });
+            describe("3d overlapping", function() {
+                makePolygonTestCases(
+                    "extruded-polygon",
+                    {
+                        "extruded-polygon-3d-overlap": { color: "#0b97c4" },
+                        "extruded-polygon-3d-overlap-rgba": {
+                            color: "#0b97c480"
+                        },
+                        "extruded-polygon-3d-overlap-rgba-outline": {
+                            color: "#0b97c480",
+                            lineWidth: 1,
+                            lineColorMix: 0,
+                            lineColor: "#7f7"
+                        }
+                    },
+                    {
+                        geoJson: {
+                            type: "FeatureCollection",
+                            features: [tower]
+                        },
+                        ...viewOptions
+                    }
+                );
+            });
+        });
+    });
 });
