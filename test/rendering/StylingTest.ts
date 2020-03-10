@@ -379,268 +379,268 @@ describe("MapView Styling Test", function() {
     //         }
     //     };
 
-    //     function makeLineTestCase(
-    //         testCases: { [name: string]: SolidLineStyle["attr"] },
-    //         lineGeometry: Feature = straightLine
-    //     ) {
-    //         // tslint:disable-next-line:forin
-    //         for (const testCase in testCases) {
-    //             const attr: SolidLineStyle["attr"] = testCases[testCase]!;
-    //             mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [lineGeometry, referenceBackground]
-    //                 },
-    //                 theme: {
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'line'",
-    //                                 technique: "solid-line",
-    //                                 attr
-    //                             }
-    //                         ]
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     }
-    //     describe("solid-line technique", function() {
-    //         describe("basic", function() {
-    //             makeLineTestCase({
-    //                 "basic-100m": { lineWidth: 100, color: "#0b97c4" },
-    //                 "basic-dash-100m": {
-    //                     lineWidth: 100,
-    //                     color: "#0b97c4",
-    //                     dashSize: 80,
-    //                     gapSize: 80
-    //                 },
-    //                 "basic-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
-    //                 "basic-100m-rgba-square": {
-    //                     lineWidth: 100,
-    //                     color: "#0b97c470",
-    //                     caps: "Square"
-    //                 },
-    //                 "basic-100m-rgba-triangle-out": {
-    //                     lineWidth: 100,
-    //                     color: "#0b97c470",
-    //                     caps: "TriangleIn"
-    //                 },
-    //                 "basic-100m-rgba-trianglein": {
-    //                     lineWidth: 100,
-    //                     color: "#0b97c470",
-    //                     caps: "TriangleOut"
-    //                 },
-    //                 "basic-100m-rgba-none": { lineWidth: 100, color: "#0b97c470", caps: "None" },
-    //                 "basic-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
-    //             });
-    //             // Short line that ends on tile border
-    //             makeLineTestCase(
-    //                 {
-    //                     "short-100m": { lineWidth: 100, color: "#0b97c4" },
-    //                     "short-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
-    //                     "short-100m-rgba-square": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "Square"
-    //                     },
-    //                     "short-100m-rgba-triangle-out": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "TriangleIn"
-    //                     },
-    //                     "short-100m-rgba-trianglein": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "TriangleOut"
-    //                     },
-    //                     "short-100m-rgba-none": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "None"
-    //                     },
-    //                     "short-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
-    //                 },
-    //                 shortLine
-    //             );
-    //             // Diagonal lines are buggy at the moment
-    //             makeLineTestCase(
-    //                 {
-    //                     "diagonal-100m": { lineWidth: 100, color: "#0b97c4" },
-    //                     "diagonal-dash-100m": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c4",
-    //                         dashSize: 80,
-    //                         gapSize: 80
-    //                     },
-    //                     "diagonal-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
-    //                     "diagonal-100m-rgba-square": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "Square"
-    //                     },
-    //                     "diagonal-100m-rgba-triangle-out": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "TriangleIn"
-    //                     },
-    //                     "diagonal-100m-rgba-trianglein": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "TriangleOut"
-    //                     },
-    //                     "diagonal-100m-rgba-none": {
-    //                         lineWidth: 100,
-    //                         color: "#0b97c470",
-    //                         caps: "None"
-    //                     },
-    //                     "diagonal-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
-    //                 },
-    //                 diagonalLine
-    //             );
-    //         });
+        function makeLineTestCase(
+            testCases: { [name: string]: SolidLineStyle["attr"] },
+            lineGeometry: Feature = straightLine
+        ) {
+            // tslint:disable-next-line:forin
+            for (const testCase in testCases) {
+                const attr: SolidLineStyle["attr"] = testCases[testCase]!;
+                mapViewFeaturesRenderingTest(`solid-line-styling-${testCase}`, {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [lineGeometry, referenceBackground]
+                    },
+                    theme: {
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'line'",
+                                    technique: "solid-line",
+                                    attr
+                                }
+                            ]
+                        }
+                    }
+                });
+            }
+        }
+        describe("solid-line technique", function() {
+            describe("basic", function() {
+                makeLineTestCase({
+                    "basic-100m": { lineWidth: 100, color: "#0b97c4" },
+                    "basic-dash-100m": {
+                        lineWidth: 100,
+                        color: "#0b97c4",
+                        dashSize: 80,
+                        gapSize: 80
+                    },
+                    "basic-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
+                    "basic-100m-rgba-square": {
+                        lineWidth: 100,
+                        color: "#0b97c470",
+                        caps: "Square"
+                    },
+                    "basic-100m-rgba-triangle-out": {
+                        lineWidth: 100,
+                        color: "#0b97c470",
+                        caps: "TriangleIn"
+                    },
+                    "basic-100m-rgba-trianglein": {
+                        lineWidth: 100,
+                        color: "#0b97c470",
+                        caps: "TriangleOut"
+                    },
+                    "basic-100m-rgba-none": { lineWidth: 100, color: "#0b97c470", caps: "None" },
+                    "basic-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
+                });
+                // Short line that ends on tile border
+                makeLineTestCase(
+                    {
+                        "short-100m": { lineWidth: 100, color: "#0b97c4" },
+                        "short-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
+                        "short-100m-rgba-square": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "Square"
+                        },
+                        "short-100m-rgba-triangle-out": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "TriangleIn"
+                        },
+                        "short-100m-rgba-trianglein": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "TriangleOut"
+                        },
+                        "short-100m-rgba-none": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "None"
+                        },
+                        "short-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
+                    },
+                    shortLine
+                );
+                // Diagonal lines are buggy at the moment
+                makeLineTestCase(
+                    {
+                        "diagonal-100m": { lineWidth: 100, color: "#0b97c4" },
+                        "diagonal-dash-100m": {
+                            lineWidth: 100,
+                            color: "#0b97c4",
+                            dashSize: 80,
+                            gapSize: 80
+                        },
+                        "diagonal-100m-rgba": { lineWidth: 100, color: "#0b97c470" },
+                        "diagonal-100m-rgba-square": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "Square"
+                        },
+                        "diagonal-100m-rgba-triangle-out": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "TriangleIn"
+                        },
+                        "diagonal-100m-rgba-trianglein": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "TriangleOut"
+                        },
+                        "diagonal-100m-rgba-none": {
+                            lineWidth: 100,
+                            color: "#0b97c470",
+                            caps: "None"
+                        },
+                        "diagonal-10px-rgba": { lineWidth: "10px", color: "#0b97c470" }
+                    },
+                    diagonalLine
+                );
+            });
 
-    //         describe("with outline", function() {
-    //             makeLineTestCase({
-    //                 "outline-10px-2px": {
-    //                     // BUGGY ?
-    //                     lineWidth: "10px",
-    //                     color: "#0b97c4",
-    //                     outlineWidth: "2px",
-    //                     outlineColor: "#7f7"
-    //                 },
-    //                 "outline-10px-2px-rgba": {
-    //                     lineWidth: "10px",
-    //                     color: "#0b97c470",
-    //                     outlineWidth: "2px",
-    //                     outlineColor: "#7f7"
-    //                 }
-    //             });
-    //             // Short line that end on tile border
-    //             makeLineTestCase(
-    //                 {
-    //                     "short-outline-10px-2px": {
-    //                         // BUGGY ?
-    //                         lineWidth: "10px",
-    //                         color: "#0b97c4",
-    //                         outlineWidth: "2px",
-    //                         outlineColor: "#7f7"
-    //                     },
-    //                     "short-outline-10px-2px-rgba": {
-    //                         lineWidth: "10px",
-    //                         color: "#0b97c470",
-    //                         outlineWidth: "2px",
-    //                         outlineColor: "#7f7"
-    //                     }
-    //                 },
-    //                 shortLine
-    //             );
-    //             // Diagonal lines are buggy at the moment
-    //             makeLineTestCase(
-    //                 {
-    //                     "diagonal-outline-10px-2px": {
-    //                         lineWidth: "10px",
-    //                         color: "#0b97c4",
-    //                         outlineWidth: "2px",
-    //                         outlineColor: "#7f7"
-    //                     },
-    //                     "diagonal-outline-10px-2px-rgba": {
-    //                         lineWidth: "10px",
-    //                         color: "#0b97c470",
-    //                         outlineWidth: "2px",
-    //                         outlineColor: "#7f7"
-    //                     }
-    //                 },
-    //                 diagonalLine
-    //             );
-    //         });
-    //     });
-    //     describe("text from lines", function() {
-    //         mapViewFeaturesRenderingTest(`line-text-basic`, {
-    //             width: 200,
-    //             height: 200,
-    //             geoJson: {
-    //                 type: "FeatureCollection",
-    //                 features: [
-    //                     // tested horizontal line
-    //                     straightLine,
-    //                     referenceBackground
-    //                 ]
-    //             },
-    //             theme: {
-    //                 ...themeTextSettings,
-    //                 styles: {
-    //                     geojson: [
-    //                         referenceBackroundStyle,
-    //                         {
-    //                             when: "$geometryType == 'line'",
-    //                             technique: "solid-line",
-    //                             attr: {
-    //                                 color: "#E3D49A",
-    //                                 outlineColor: "#3A4C69",
-    //                                 lineWidth: 40,
-    //                                 outlineWidth: 10
-    //                             }
-    //                         },
-    //                         {
-    //                             when: "$geometryType == 'line'",
-    //                             technique: "text",
-    //                             attr: {
-    //                                 text: "Test",
-    //                                 color: "#2f3",
-    //                                 backgroundColor: "#cfe",
-    //                                 size: 20,
-    //                                 backgroundSize: 5,
-    //                                 fontStyle: "Bold",
-    //                                 vAlignment: "Above"
-    //                             }
-    //                         }
-    //                     ]
-    //                 }
-    //             }
-    //         });
-    //     });
-    // });
-    // describe("polygon features", function() {
-    //     const lights: Light[] = [
-    //         {
-    //             type: "ambient",
-    //             color: "#FFFFFF",
-    //             name: "ambientLight",
-    //             intensity: 0.5
-    //         },
-    //         {
-    //             type: "directional",
-    //             color: "#FFFFFF",
-    //             name: "light1",
-    //             intensity: 0.5,
-    //             direction: {
-    //                 x: -5,
-    //                 y: -2,
-    //                 z: 10
-    //             }
-    //         }
-    //     ];
-    //     const rectangle: Feature = {
-    //         // sample rectangular polygon
-    //         type: "Feature",
-    //         geometry: {
-    //             type: "Polygon",
-    //             coordinates: [
-    //                 [
-    //                     [0.004, 0.002],
-    //                     [-0.004, 0.002],
-    //                     [-0.004, -0.002],
-    //                     [0.004, -0.002]
-    //                 ]
-    //             ]
-    //         },
-    //         properties: {
-    //             kind: "mall",
-    //             height: 200
-    //         }
-    //     };
+            describe("with outline", function() {
+                makeLineTestCase({
+                    "outline-10px-2px": {
+                        // BUGGY ?
+                        lineWidth: "10px",
+                        color: "#0b97c4",
+                        outlineWidth: "2px",
+                        outlineColor: "#7f7"
+                    },
+                    "outline-10px-2px-rgba": {
+                        lineWidth: "10px",
+                        color: "#0b97c470",
+                        outlineWidth: "2px",
+                        outlineColor: "#7f7"
+                    }
+                });
+                // Short line that end on tile border
+                makeLineTestCase(
+                    {
+                        "short-outline-10px-2px": {
+                            // BUGGY ?
+                            lineWidth: "10px",
+                            color: "#0b97c4",
+                            outlineWidth: "2px",
+                            outlineColor: "#7f7"
+                        },
+                        "short-outline-10px-2px-rgba": {
+                            lineWidth: "10px",
+                            color: "#0b97c470",
+                            outlineWidth: "2px",
+                            outlineColor: "#7f7"
+                        }
+                    },
+                    shortLine
+                );
+                // Diagonal lines are buggy at the moment
+                makeLineTestCase(
+                    {
+                        "diagonal-outline-10px-2px": {
+                            lineWidth: "10px",
+                            color: "#0b97c4",
+                            outlineWidth: "2px",
+                            outlineColor: "#7f7"
+                        },
+                        "diagonal-outline-10px-2px-rgba": {
+                            lineWidth: "10px",
+                            color: "#0b97c470",
+                            outlineWidth: "2px",
+                            outlineColor: "#7f7"
+                        }
+                    },
+                    diagonalLine
+                );
+            });
+        });
+        describe("text from lines", function() {
+            mapViewFeaturesRenderingTest(`line-text-basic`, {
+                width: 200,
+                height: 200,
+                geoJson: {
+                    type: "FeatureCollection",
+                    features: [
+                        // tested horizontal line
+                        straightLine,
+                        referenceBackground
+                    ]
+                },
+                theme: {
+                    ...themeTextSettings,
+                    styles: {
+                        geojson: [
+                            referenceBackroundStyle,
+                            {
+                                when: "$geometryType == 'line'",
+                                technique: "solid-line",
+                                attr: {
+                                    color: "#E3D49A",
+                                    outlineColor: "#3A4C69",
+                                    lineWidth: 40,
+                                    outlineWidth: 10
+                                }
+                            },
+                            {
+                                when: "$geometryType == 'line'",
+                                technique: "text",
+                                attr: {
+                                    text: "Test",
+                                    color: "#2f3",
+                                    backgroundColor: "#cfe",
+                                    size: 20,
+                                    backgroundSize: 5,
+                                    fontStyle: "Bold",
+                                    vAlignment: "Above"
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+    });
+    describe("polygon features", function() {
+        const lights: Light[] = [
+            {
+                type: "ambient",
+                color: "#FFFFFF",
+                name: "ambientLight",
+                intensity: 0.5
+            },
+            {
+                type: "directional",
+                color: "#FFFFFF",
+                name: "light1",
+                intensity: 0.5,
+                direction: {
+                    x: -5,
+                    y: -2,
+                    z: 10
+                }
+            }
+        ];
+        const rectangle: Feature = {
+            // sample rectangular polygon
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [
+                    [
+                        [0.004, 0.002],
+                        [-0.004, 0.002],
+                        [-0.004, -0.002],
+                        [0.004, -0.002]
+                    ]
+                ]
+            },
+            properties: {
+                kind: "mall",
+                height: 200
+            }
+        };
 
     //     function makePolygonTestCases<T extends FillStyle | ExtrudedPolygonStyle>(
     //         technique: "fill" | "extruded-polygon",
@@ -661,139 +661,139 @@ describe("MapView Styling Test", function() {
     //         for (const testCase in testCases) {
     //             const attr: T["attr"] = testCases[testCase]!;
 
-    //             mapViewFeaturesRenderingTest(`polygon-styling-${testCase}`, {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [
-    //                         // tested horizontal line
-    //                         rectangle,
-    //                         referenceBackground,
-    //                         ...extraFeatures
-    //                     ]
-    //                 },
-    //                 theme: {
-    //                     lights,
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'polygon'",
-    //                                 technique: technique as any,
-    //                                 attr: attr as any
-    //                             }
-    //                         ]
-    //                     }
-    //                 },
-    //                 ...options
-    //             });
-    //         }
-    //     }
-    //     describe("fill technique", function() {
-    //         describe("no outline", function() {
-    //             makePolygonTestCases("fill", {
-    //                 fill: { color: "#0b97c4" },
-    //                 "fill-rgba": { color: "#0b97c470" }
-    //             });
-    //         });
-    //         describe("with outline", function() {
-    //             makePolygonTestCases("fill", {
-    //                 // all tests are buggy ? because all outlines have 1px width
-    //                 "fill-outline-200m": { color: "#0b97c4", lineColor: "#7f7", lineWidth: 200 },
-    //                 "fill-rgba-outline-200m": {
-    //                     color: "#0b97c470",
-    //                     lineColor: "#7f7",
-    //                     lineWidth: 200
-    //                 },
-    //                 "fiil-rgba-outline-rgba-200m": {
-    //                     color: "#0b97c470",
-    //                     lineColor: "#7f77",
-    //                     lineWidth: 200
-    //                 }
+                mapViewFeaturesRenderingTest(`polygon-styling-${testCase}`, {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [
+                            // tested horizontal line
+                            rectangle,
+                            referenceBackground,
+                            ...extraFeatures
+                        ]
+                    },
+                    theme: {
+                        lights,
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'polygon'",
+                                    technique: technique as any,
+                                    attr: attr as any
+                                }
+                            ]
+                        }
+                    },
+                    ...options
+                });
+            }
+        }
+        describe("fill technique", function() {
+            describe("no outline", function() {
+                makePolygonTestCases("fill", {
+                    fill: { color: "#0b97c4" },
+                    "fill-rgba": { color: "#0b97c470" }
+                });
+            });
+            describe("with outline", function() {
+                makePolygonTestCases("fill", {
+                    // all tests are buggy ? because all outlines have 1px width
+                    "fill-outline-200m": { color: "#0b97c4", lineColor: "#7f7", lineWidth: 200 },
+                    "fill-rgba-outline-200m": {
+                        color: "#0b97c470",
+                        lineColor: "#7f7",
+                        lineWidth: 200
+                    },
+                    "fiil-rgba-outline-rgba-200m": {
+                        color: "#0b97c470",
+                        lineColor: "#7f77",
+                        lineWidth: 200
+                    }
 
-    //                 // TODO: not supported by typings
-    //                 // "rect-rgba-outline-rgba-5px": {
-    //                 //     color: "#0b97c470",
-    //                 //     lineColor: "#7f77",
-    //                 //     lineWidth: "5px"
-    //                 // }
-    //             });
-    //         });
-    //     });
-    //     describe("standard technique", function() {
-    //         mapViewFeaturesRenderingTest(
-    //             `polygon-standard-texture`,
-    //             {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [rectangle, referenceBackground]
-    //                 },
-    //                 theme: {
-    //                     lights,
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'polygon'",
-    //                                 technique: "standard",
-    //                                 attr: {
-    //                                     color: "#ffffff",
-    //                                     map: "../dist/resources/wests_textures/paving.png",
-    //                                     mapProperties: {
-    //                                         repeatU: 10,
-    //                                         repeatV: 10,
-    //                                         wrapS: "repeat",
-    //                                         wrapT: "repeat"
-    //                                     },
-    //                                     textureCoordinateType: TextureCoordinateType.TileSpace
-    //                                 }
-    //                             }
-    //                         ]
-    //                     }
-    //                 }
-    //             },
-    //             async () => {
-    //                 // we have no API to know when texture is already loaded
-    //                 return new Promise(resolve => setTimeout(resolve, 500));
-    //             }
-    //         );
-    //         mapViewFeaturesRenderingTest(
-    //             `polygon-standard-texture-transparent`,
-    //             {
-    //                 geoJson: {
-    //                     type: "FeatureCollection",
-    //                     features: [rectangle, referenceBackground]
-    //                 },
-    //                 theme: {
-    //                     lights,
-    //                     styles: {
-    //                         geojson: [
-    //                             referenceBackroundStyle,
-    //                             {
-    //                                 when: "$geometryType == 'polygon'",
-    //                                 technique: "standard",
-    //                                 attr: {
-    //                                     color: "#ffffff",
-    //                                     opacity: 0.5,
-    //                                     map: "../dist/resources/wests_textures/paving.png",
-    //                                     mapProperties: {
-    //                                         repeatU: 10,
-    //                                         repeatV: 10,
-    //                                         wrapS: "repeat",
-    //                                         wrapT: "repeat"
-    //                                     },
-    //                                     textureCoordinateType: TextureCoordinateType.TileSpace
-    //                                 }
-    //                             }
-    //                         ]
-    //                     }
-    //                 }
-    //             },
-    //             async () => {
-    //                 // we have no API to know when texture is already loaded
-    //                 return new Promise(resolve => setTimeout(resolve, 500));
-    //             }
-    //         );
-    //     });
+                    // TODO: not supported by typings
+                    // "rect-rgba-outline-rgba-5px": {
+                    //     color: "#0b97c470",
+                    //     lineColor: "#7f77",
+                    //     lineWidth: "5px"
+                    // }
+                });
+            });
+        });
+        describe("standard technique", function() {
+            mapViewFeaturesRenderingTest(
+                `polygon-standard-texture`,
+                {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [rectangle, referenceBackground]
+                    },
+                    theme: {
+                        lights,
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'polygon'",
+                                    technique: "standard",
+                                    attr: {
+                                        color: "#ffffff",
+                                        map: "../dist/resources/wests_textures/paving.png",
+                                        mapProperties: {
+                                            repeatU: 10,
+                                            repeatV: 10,
+                                            wrapS: "repeat",
+                                            wrapT: "repeat"
+                                        },
+                                        textureCoordinateType: TextureCoordinateType.TileSpace
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                async () => {
+                    // we have no API to know when texture is already loaded
+                    return new Promise(resolve => setTimeout(resolve, 500));
+                }
+            );
+            mapViewFeaturesRenderingTest(
+                `polygon-standard-texture-transparent`,
+                {
+                    geoJson: {
+                        type: "FeatureCollection",
+                        features: [rectangle, referenceBackground]
+                    },
+                    theme: {
+                        lights,
+                        styles: {
+                            geojson: [
+                                referenceBackroundStyle,
+                                {
+                                    when: "$geometryType == 'polygon'",
+                                    technique: "standard",
+                                    attr: {
+                                        color: "#ffffff",
+                                        opacity: 0.5,
+                                        map: "../dist/resources/wests_textures/paving.png",
+                                        mapProperties: {
+                                            repeatU: 10,
+                                            repeatV: 10,
+                                            wrapS: "repeat",
+                                            wrapT: "repeat"
+                                        },
+                                        textureCoordinateType: TextureCoordinateType.TileSpace
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                async () => {
+                    // we have no API to know when texture is already loaded
+                    return new Promise(resolve => setTimeout(resolve, 500));
+                }
+            );
+        });
 
     //     describe("extruded-polygon technique", function() {
     //         const tower: Feature = {
