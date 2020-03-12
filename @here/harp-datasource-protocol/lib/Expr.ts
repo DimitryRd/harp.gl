@@ -9,8 +9,10 @@ import { ExprEvaluator, ExprEvaluatorContext, OperatorDescriptor } from "./ExprE
 import { ExprInstantiator, InstantiationContext } from "./ExprInstantiator";
 import { ExprParser } from "./ExprParser";
 import { ExprPool } from "./ExprPool";
-import { isInterpolatedPropertyDefinition } from "./InterpolatedProperty";
-import { interpolatedPropertyDefinitionToJsonExpr } from "./InterpolatedPropertyDefs";
+import {
+    interpolatedPropertyDefinitionToJsonExpr,
+    isInterpolatedPropertyDefinition
+} from "./InterpolatedPropertyDefs";
 import { Definitions, isBoxedDefinition, isLiteralDefinition } from "./Theme";
 
 export * from "./Env";
@@ -88,6 +90,17 @@ class ComputeExprDependencies implements ExprVisitor<void, ExprDependencies> {
 
     visitCallExpr(expr: CallExpr, context: ExprDependencies): void {
         expr.args.forEach(childExpr => childExpr.accept(this, context));
+
+        switch (expr.op) {
+            case "id":
+                context.properties.add("$id");
+                break;
+            case "geometry-type":
+                context.properties.add("$geometryType");
+                break;
+            default:
+                break;
+        }
     }
 
     visitMatchExpr(expr: MatchExpr, context: ExprDependencies): void {

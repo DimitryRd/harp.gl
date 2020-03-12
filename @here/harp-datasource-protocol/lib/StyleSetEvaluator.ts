@@ -26,8 +26,11 @@ import {
     VarExpr
 } from "./Expr";
 import { ExprPool } from "./ExprPool";
-import { isInterpolatedPropertyDefinition } from "./InterpolatedProperty";
-import { interpolatedPropertyDefinitionToJsonExpr } from "./InterpolatedPropertyDefs";
+import {} from "./InterpolatedProperty";
+import {
+    interpolatedPropertyDefinitionToJsonExpr,
+    isInterpolatedPropertyDefinition
+} from "./InterpolatedPropertyDefs";
 import { AttrScope, mergeTechniqueDescriptor } from "./TechniqueDescriptor";
 import { IndexedTechnique, Technique, techniqueDescriptors } from "./Techniques";
 import {
@@ -476,7 +479,8 @@ export class StyleSetEvaluator {
             try {
                 style._whenExpr = Array.isArray(style.when)
                     ? Expr.fromJSON(style.when, this.m_definitions, this.m_definitionExprCache)
-                    : Expr.parse(style.when);
+                    : // tslint:disable-next-line: deprecation
+                      Expr.parse(style.when);
 
                 // search for usages of '$layer' and any other
                 // special symbol that can be used to speed up the evaluation
@@ -847,7 +851,6 @@ export class StyleSetEvaluator {
 
         technique._index = this.m_techniques.length;
         technique._styleSetIndex = style._styleSetIndex!;
-        technique._key = key;
         if (style.styleSet !== undefined) {
             technique._styleSet = style.styleSet;
         }
@@ -898,7 +901,7 @@ function resolveStyleReferences(
 /**
  * Create transferable representation of dynamic technique.
  *
- * As for now, we remove all `Expr` as they are not supported on other side.
+ * Converts  non-transferable [[Expr]]instances back to JSON form.
  */
 export function makeDecodedTechnique(technique: IndexedTechnique): IndexedTechnique {
     const result: Partial<IndexedTechnique> = {};

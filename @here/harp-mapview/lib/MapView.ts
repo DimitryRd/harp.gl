@@ -688,6 +688,7 @@ export class MapView extends THREE.EventDispatcher {
 
     private m_visibleTiles: VisibleTileSet;
 
+    private m_elevationSource?: DataSource;
     private m_elevationRangeSource?: ElevationRangeSource;
     private m_elevationProvider?: ElevationProvider;
     private m_visibleTileSetLock: boolean = false;
@@ -1726,6 +1727,7 @@ export class MapView extends THREE.EventDispatcher {
         return this.m_zoomLevel;
     }
     set zoomLevel(zoomLevel: number) {
+        zoomLevel = MapViewUtils.roundZoomLevel(zoomLevel);
         this.m_zoomLevel = THREE.MathUtils.clamp(
             zoomLevel,
             this.m_minZoomLevel,
@@ -2001,6 +2003,7 @@ export class MapView extends THREE.EventDispatcher {
      * @param yawDeg Camera yaw in degrees, counter-clockwise (as opposed to heading), starting
      * north.
      * @param pitchDeg Camera pitch in degrees.
+     * @deprecated Use [[MapView.lookAt]] instead.
      */
     setCameraGeolocationAndZoom(
         geoPos: GeoCoordinates,
@@ -2413,16 +2416,26 @@ export class MapView extends THREE.EventDispatcher {
      * @param elevationProvider Allows access to the elevation at a given location or a ray
      *      from the camera.
      */
-    setElevationSource(
+    async setElevationSource(
         elevationSource: DataSource,
         elevationRangeSource: ElevationRangeSource,
         elevationProvider: ElevationProvider
     ) {
-        // Try to remove incase this method was already called, will do nothing if it doesn't exist.
-        this.removeDataSource(elevationSource);
-        this.addDataSource(elevationSource);
+        // Remove previous elevation source if present
+        if (this.m_elevationSource && this.m_elevationSource !== elevationSource) {
+            this.removeDataSource(this.m_elevationSource);
+        }
+
+        // Add as datasource if it was not added before
+        const isPresent = this.m_tileDataSources.indexOf(elevationSource) !== -1;
+        if (!isPresent) {
+            await this.addDataSource(elevationSource);
+        }
+        this.m_elevationSource = elevationSource;
         this.m_elevationRangeSource = elevationRangeSource;
-        this.m_elevationRangeSource.connect();
+        if (!this.m_elevationRangeSource.ready()) {
+            await this.m_elevationRangeSource.connect();
+        }
         this.m_elevationProvider = elevationProvider;
         this.dataSources.forEach(dataSource => {
             dataSource.setEnableElevationOverlay(true);
@@ -2439,6 +2452,7 @@ export class MapView extends THREE.EventDispatcher {
      */
     clearElevationSource(elevationSource: DataSource) {
         this.removeDataSource(elevationSource);
+        this.m_elevationSource = undefined;
         this.m_elevationRangeSource = undefined;
         this.m_elevationProvider = undefined;
         this.dataSources.forEach(dataSource => {
@@ -2709,34 +2723,36 @@ export class MapView extends THREE.EventDispatcher {
     /**
      * Renders the current frame.
      */
-    private render(time: number): void {
+    private render(frameStartTime: number): void {
         if (this.m_drawing) {
             return;
         }
-        ++this.m_frameNumber;
 
-        const stats = PerformanceStatistics.instance;
-        const gatherStatistics: boolean = stats.enabled;
-
-        const frameStartTime = time;
-
-        RENDER_EVENT.time = time;
+        RENDER_EVENT.time = frameStartTime;
         this.dispatchEvent(RENDER_EVENT);
 
-        let currentFrameEvent: FrameStats | undefined;
+        ++this.m_frameNumber;
 
+        let currentFrameEvent: FrameStats | undefined;
+        const stats = PerformanceStatistics.instance;
+        const gatherStatistics: boolean = stats.enabled;
         if (gatherStatistics) {
             currentFrameEvent = stats.currentFrame;
-            currentFrameEvent.setValue("renderCount.frameNumber", this.m_frameNumber);
 
             if (this.m_previousFrameTimeStamp !== undefined) {
+                // In contrast to fullFrameTime we also measure the application code
+                // for the FPS. This means FPS != 1000 / fullFrameTime.
                 const timeSincePreviousFrame = frameStartTime - this.m_previousFrameTimeStamp;
-                if (gatherStatistics) {
-                    currentFrameEvent.setValue("render.fullFrameTime", timeSincePreviousFrame);
-                    // For convenience and easy readability
-                    currentFrameEvent.setValue("render.fps", 1000 / timeSincePreviousFrame);
-                }
+                currentFrameEvent.setValue("render.fps", 1000 / timeSincePreviousFrame);
             }
+
+            // We store the last frame statistics at the beginning of the next frame b/c additional
+            // work (i.e. geometry creation) is done outside of the animation frame but still needs
+            // to be added to the `fullFrameTime` (see [[TileGeometryLoader]]).
+            stats.storeAndClearFrameInfo();
+
+            currentFrameEvent = currentFrameEvent as FrameStats;
+            currentFrameEvent.setValue("renderCount.frameNumber", this.m_frameNumber);
         }
 
         this.m_previousFrameTimeStamp = frameStartTime;
@@ -2765,9 +2781,7 @@ export class MapView extends THREE.EventDispatcher {
         this.m_renderer.clear();
 
         // clear the scene
-        while (this.m_mapTilesRoot.children.length > 0) {
-            this.m_mapTilesRoot.remove(this.m_mapTilesRoot.children[0]);
-        }
+        this.m_mapTilesRoot.children.length = 0;
 
         if (gatherStatistics) {
             setupTime = PerformanceTimer.now();
@@ -2849,7 +2863,7 @@ export class MapView extends THREE.EventDispatcher {
             });
         }
 
-        if (this.m_movementDetector.checkCameraMoved(this, time)) {
+        if (this.m_movementDetector.checkCameraMoved(this, frameStartTime)) {
             const { yaw, pitch, roll } = MapViewUtils.extractAttitude(this, this.camera);
             const { latitude, longitude, altitude } = this.geoCenter;
             this.dispatchEvent({
@@ -2868,7 +2882,7 @@ export class MapView extends THREE.EventDispatcher {
         const camera = this.m_pointOfView !== undefined ? this.m_pointOfView : this.m_rteCamera;
 
         if (this.renderLabels) {
-            this.prepareRenderTextElements(time);
+            this.prepareRenderTextElements(frameStartTime);
         }
 
         if (gatherStatistics) {
@@ -2901,10 +2915,10 @@ export class MapView extends THREE.EventDispatcher {
             this.m_firstFrameRendered = true;
 
             if (gatherStatistics) {
-                stats.appResults.set("firstFrame", time);
+                stats.appResults.set("firstFrame", frameStartTime);
             }
 
-            FIRST_FRAME_EVENT.time = time;
+            FIRST_FRAME_EVENT.time = frameStartTime;
             this.dispatchEvent(FIRST_FRAME_EVENT);
         }
 
@@ -2921,18 +2935,33 @@ export class MapView extends THREE.EventDispatcher {
         if (currentFrameEvent !== undefined) {
             endTime = PerformanceTimer.now();
 
+            const frameRenderTime = endTime - frameStartTime;
+
             currentFrameEvent.setValue("render.setupTime", setupTime! - frameStartTime);
             currentFrameEvent.setValue("render.cullTime", cullTime! - setupTime!);
             currentFrameEvent.setValue("render.textPlacementTime", textPlacementTime! - cullTime!);
             currentFrameEvent.setValue("render.drawTime", drawTime! - textPlacementTime!);
             currentFrameEvent.setValue("render.textDrawTime", textDrawTime! - drawTime!);
             currentFrameEvent.setValue("render.cleanupTime", endTime - textDrawTime!);
-            currentFrameEvent.setValue("render.frameRenderTime", endTime - frameStartTime);
+            currentFrameEvent.setValue("render.frameRenderTime", frameRenderTime);
 
-            PerformanceStatistics.instance.storeFrameInfo(this.m_renderer.info);
+            // Initialize the fullFrameTime with the frameRenderTime If we also create geometry in
+            // this frame, this number will be increased in the TileGeometryLoader.
+            currentFrameEvent.setValue("render.fullFrameTime", frameRenderTime);
+            currentFrameEvent.setValue("render.geometryCreationTime", 0);
+
+            // Add THREE.js statistics
+            stats.addWebGLInfo(this.m_renderer.info);
+
+            // Add memory statistics
+            // FIXME:
+            // This will only measure the memory of the rendering and not of the geometry creation.
+            // Assuming the garbage collector is not kicking in immediately we will at least see
+            // the geometry creation memory consumption acounted in the next frame.
+            stats.addMemoryInfo();
         }
 
-        DID_RENDER_EVENT.time = time;
+        DID_RENDER_EVENT.time = frameStartTime;
         this.dispatchEvent(DID_RENDER_EVENT);
 
         // After completely rendering this frame, it is checked if this frame was the first complete
@@ -2948,10 +2977,10 @@ export class MapView extends THREE.EventDispatcher {
             this.m_firstFrameComplete = true;
 
             if (gatherStatistics) {
-                stats.appResults.set("firstFrameComplete", time);
+                stats.appResults.set("firstFrameComplete", frameStartTime);
             }
 
-            FRAME_COMPLETE_EVENT.time = time;
+            FRAME_COMPLETE_EVENT.time = frameStartTime;
             this.dispatchEvent(FRAME_COMPLETE_EVENT);
         }
     }

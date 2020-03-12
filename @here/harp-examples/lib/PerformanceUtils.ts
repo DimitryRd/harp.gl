@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2019 HERE Europe B.V.
+ * Copyright (C) 2017-2020 HERE Europe B.V.
  * Licensed under Apache 2.0, see full license in LICENSE
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -8,7 +8,6 @@ import { GeoCoordinates } from "@here/harp-geoutils";
 import { MapControls } from "@here/harp-map-controls";
 import {
     computeArrayStats,
-    CopyrightInfo,
     DataSource,
     MapView,
     MapViewEventNames,
@@ -19,11 +18,10 @@ import {
     SimpleFrameStatistics
 } from "@here/harp-mapview";
 import { debugContext } from "@here/harp-mapview/lib/DebugContext";
-import { APIFormat, OmvDataSource } from "@here/harp-omv-datasource";
+import { APIFormat, AuthenticationMethod, OmvDataSource } from "@here/harp-omv-datasource";
 import { assert, LoggerManager, PerformanceTimer } from "@here/harp-utils";
 import * as THREE from "three";
-
-import { accessToken } from "../config";
+import { apikey, copyrightInfo } from "../config";
 import { PerformanceTestData } from "./PerformanceConfig";
 
 const logger = LoggerManager.instance.create("PerformanceUtils");
@@ -182,25 +180,20 @@ export namespace PerformanceUtils {
         dataSourceTypes: string[],
         storageLevelOffsetModifier: number
     ): Promise<DataSource[]> {
-        const hereCopyrightInfo: CopyrightInfo = {
-            id: "here.com",
-            year: new Date().getFullYear(),
-            label: "HERE",
-            link: "https://legal.here.com/terms"
-        };
-        const copyrights: CopyrightInfo[] = [hereCopyrightInfo];
-
         const createDataSource = (dataSourceType: string): OmvDataSource => {
             let dataSource: OmvDataSource | undefined;
             switch (dataSourceType) {
                 case "OMV":
                     dataSource = new OmvDataSource({
-                        baseUrl: "https://xyz.api.here.com/tiles/herebase.02",
+                        baseUrl: "https://vector.hereapi.com/v2/vectortiles/base/mc",
                         apiFormat: APIFormat.XYZOMV,
                         styleSetName: "tilezen",
-                        maxZoomLevel: 17,
-                        authenticationCode: accessToken,
-                        copyrightInfo: copyrights
+                        authenticationCode: apikey,
+                        authenticationMethod: {
+                            method: AuthenticationMethod.QueryString,
+                            name: "apikey"
+                        },
+                        copyrightInfo
                     });
                     break;
                 default:
@@ -449,18 +442,11 @@ export namespace PerformanceUtils {
         force?: boolean
     ) {
         const mapView = mapViewApp.mapView;
-        const targetCoordinates = new GeoCoordinates(lat, long);
-        let cameraCoordinates: GeoCoordinates = targetCoordinates;
-        if (pitch > 0) {
-            cameraCoordinates = MapViewUtils.getCameraCoordinatesFromTargetCoordinates(
-                targetCoordinates,
-                zoomLevel,
-                yaw,
-                pitch,
-                mapView
-            );
-        }
-        mapView.setCameraGeolocationAndZoom(cameraCoordinates, zoomLevel, yaw, pitch);
+        const target = new GeoCoordinates(lat, long);
+        const distance = MapViewUtils.calculateDistanceFromZoomLevel(mapView, zoomLevel);
+        const tilt = THREE.MathUtils.radToDeg(pitch);
+        const heading = -THREE.MathUtils.radToDeg(yaw);
+        mapView.lookAt(target, distance, tilt, heading);
 
         if (force === true) {
             await delay(0);

@@ -102,7 +102,7 @@ describe("TileGeometryCreator", () => {
                     objInfos: [decodedDisplacementMap]
                 }
             ],
-            techniques: [{ name: "terrain", renderOrder: 0 }]
+            techniques: [{ name: "terrain", renderOrder: 0, _index: 0, _styleSetIndex: 0 }]
         };
         tgc.createObjects(newTile, decodedTile);
         assert.equal(newTile.objects.length, 1);
@@ -143,7 +143,6 @@ describe("TileGeometryCreator", () => {
                     _category: "hi-priority",
                     _index: 0,
                     _styleSetIndex: 0,
-                    _key: "key-0",
                     renderOrder: -1,
                     name: "line",
                     color: "rgb(255,0,0)",
@@ -155,7 +154,6 @@ describe("TileGeometryCreator", () => {
                     _index: 1,
                     _styleSetIndex: 0,
                     renderOrder: -1,
-                    _key: "key-0",
                     name: "circles"
                 }
             ]

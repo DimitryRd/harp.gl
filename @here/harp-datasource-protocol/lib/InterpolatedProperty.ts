@@ -11,11 +11,7 @@ import { ColorUtils } from "./ColorUtils";
 import { Env } from "./Env";
 import { ExponentialInterpolant } from "./ExponentialInterpolant";
 import { Expr, ExprScope, Value } from "./Expr";
-import {
-    InterpolatedProperty,
-    InterpolatedPropertyDefinition,
-    InterpolationMode
-} from "./InterpolatedPropertyDefs";
+import { InterpolatedPropertyDefinition, InterpolationMode } from "./InterpolatedPropertyDefs";
 import {
     parseStringEncodedNumeral,
     StringEncodedColorFormats,
@@ -38,26 +34,41 @@ const interpolants = [
 const tmpBuffer = new Array<number>(StringEncodedNumeralFormatMaxSize);
 
 /**
- * Checks if a property is interpolated.
- * @param p property to be checked
+ * Property which value is interpolated across different zoom levels.
  */
-export function isInterpolatedPropertyDefinition<T>(
-    p: any
-): p is InterpolatedPropertyDefinition<T> {
-    if (
-        p &&
-        p.interpolationMode === undefined &&
-        Array.isArray(p.values) &&
-        p.values.length > 0 &&
-        p.values[0] !== undefined &&
-        Array.isArray(p.zoomLevels) &&
-        p.zoomLevels.length > 0 &&
-        p.zoomLevels[0] !== undefined &&
-        p.values.length === p.zoomLevels.length
-    ) {
-        return true;
-    }
-    return false;
+export interface InterpolatedProperty {
+    /**
+     * Interpolation mode that should be used for this property.
+     */
+    interpolationMode: InterpolationMode;
+
+    /**
+     * Zoom level keys array.
+     */
+    zoomLevels: Float32Array;
+
+    /**
+     * Property values array.
+     */
+    values: ArrayLike<any>;
+
+    /**
+     * Exponent used in interpolation. Only valid with `Exponential` [[InterpolationMode]].
+     */
+    exponent?: number;
+
+    /**
+     * @hidden
+     * [[StringEncodedNumeral]] type needed to interpret interpolated values back to numbers.
+     */
+    _stringEncodedNumeralType?: StringEncodedNumeralType;
+
+    /**
+     * @hidden
+     * Array of `0` and `1`mask values used to modify the interpolation behaviour of some
+     * [[StringEncodedNumeral]]s.
+     */
+    _stringEncodedNumeralDynamicMask?: Float32Array;
 }
 
 /**
@@ -85,19 +96,24 @@ export function isInterpolatedProperty(p: any): p is InterpolatedProperty {
 * @param property Property of a technique.
 * @param env The [[Env]] used to evaluate the property
 */
-export function getPropertyValue(
-    property: Value | Expr | InterpolatedProperty | undefined,
-    env: Env
-): any {
+export function getPropertyValue(property: Value | Expr | undefined, env: Env): any {
     if (Expr.isExpr(property)) {
-        return property.evaluate(env, ExprScope.Dynamic);
+        try {
+            return property.evaluate(env, ExprScope.Dynamic);
+        } catch (error) {
+            logger.error(
+                "failed to evaluate expression",
+                JSON.stringify(property),
+                "error",
+                String(error)
+            );
+            return null;
+        }
     }
 
-    if (isInterpolatedProperty(property)) {
-        return evaluateInterpolatedProperty(property, env);
-    }
-
-    if (typeof property !== "string") {
+    if (property === null || typeof property === "undefined") {
+        return null;
+    } else if (typeof property !== "string") {
         // Property in numeric or array, etc. format
         return property;
     } else {

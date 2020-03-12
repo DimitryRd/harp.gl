@@ -17,7 +17,6 @@ import {
     getArrayConstructor,
     getFeatureId,
     getPropertyValue,
-    IndexedTechnique,
     isCirclesTechnique,
     isExtrudedLineTechnique,
     isExtrudedPolygonTechnique,
@@ -363,7 +362,7 @@ export class TileGeometryCreator {
         textFilter?: (technique: Technique) => boolean
     ) {
         const mapView = tile.mapView;
-        const textElementsRenderer = mapView.textElementsRenderer;
+        const textStyleCache = tile.textStyleCache;
         const worldOffsetX = tile.computeWorldOffsetX();
 
         const discreteZoomLevel = Math.floor(mapView.zoomLevel);
@@ -416,8 +415,8 @@ export class TileGeometryCreator {
                 const textElement = new TextElement(
                     ContextualArabicConverter.instance.convert(textPath.text),
                     path,
-                    textElementsRenderer.styleCache.getRenderStyle(tile, technique),
-                    textElementsRenderer.styleCache.getLayoutStyle(tile, technique),
+                    textStyleCache.getRenderStyle(technique),
+                    textStyleCache.getLayoutStyle(technique),
                     priority,
                     technique.xOffset !== undefined ? technique.xOffset : 0.0,
                     technique.yOffset !== undefined ? technique.yOffset : 0.0,
@@ -505,8 +504,8 @@ export class TileGeometryCreator {
                     const textElement = new TextElement(
                         ContextualArabicConverter.instance.convert(label!),
                         new THREE.Vector3(x, y, z),
-                        textElementsRenderer.styleCache.getRenderStyle(tile, technique),
-                        textElementsRenderer.styleCache.getLayoutStyle(tile, technique),
+                        textStyleCache.getRenderStyle(technique),
+                        textStyleCache.getLayoutStyle(technique),
                         priority,
                         technique.xOffset || 0.0,
                         technique.yOffset || 0.0,
@@ -635,46 +634,27 @@ export class TileGeometryCreator {
 
                 const bufferGeometry = new THREE.BufferGeometry();
 
-                srcGeometry.vertexAttributes.forEach((vertexAttribute: BufferAttribute) => {
+                srcGeometry.vertexAttributes?.forEach((vertexAttribute: BufferAttribute) => {
                     const buffer = getBufferAttribute(vertexAttribute);
                     bufferGeometry.setAttribute(vertexAttribute.name, buffer);
                 });
 
-                if (srcGeometry.interleavedVertexAttributes !== undefined) {
-                    srcGeometry.interleavedVertexAttributes.forEach(
-                        (attr: {
-                            type: any;
-                            buffer: any;
-                            stride: any;
-                            attributes: {
-                                forEach: (
-                                    arg0: (interleavedAttr: {
-                                        itemSize: any;
-                                        offset: any;
-                                        name: any;
-                                    }) => void
-                                ) => void;
-                            };
-                        }) => {
-                            const ArrayCtor = getArrayConstructor(attr.type);
-                            const buffer = new THREE.InterleavedBuffer(
-                                new ArrayCtor(attr.buffer),
-                                attr.stride
-                            );
-                            attr.attributes.forEach(
-                                (interleavedAttr: { itemSize: any; offset: any; name: any }) => {
-                                    const attribute = new THREE.InterleavedBufferAttribute(
-                                        buffer,
-                                        interleavedAttr.itemSize,
-                                        interleavedAttr.offset,
-                                        false
-                                    );
-                                    bufferGeometry.setAttribute(interleavedAttr.name, attribute);
-                                }
-                            );
-                        }
+                srcGeometry.interleavedVertexAttributes?.forEach(attr => {
+                    const ArrayCtor = getArrayConstructor(attr.type);
+                    const buffer = new THREE.InterleavedBuffer(
+                        new ArrayCtor(attr.buffer),
+                        attr.stride
                     );
-                }
+                    attr.attributes.forEach(interleavedAttr => {
+                        const attribute = new THREE.InterleavedBufferAttribute(
+                            buffer,
+                            interleavedAttr.itemSize,
+                            interleavedAttr.offset,
+                            false
+                        );
+                        bufferGeometry.setAttribute(interleavedAttr.name, attribute);
+                    });
+                });
 
                 if (srcGeometry.index) {
                     bufferGeometry.setIndex(getBufferAttribute(srcGeometry.index));
@@ -766,6 +746,7 @@ export class TileGeometryCreator {
                         (renderer, mat) => {
                             const lineMaterial = mat as SolidLineMaterial;
                             const unitFactor =
+                                // tslint:disable-next-line: deprecation
                                 technique.metricUnit === "Pixel" ? mapView.pixelToWorld : 1.0;
 
                             if (hasDynamicColor) {
@@ -918,7 +899,7 @@ export class TileGeometryCreator {
                         technique.animateExtrusion,
                         discreteZoomEnv
                     );
-                    if (animateExtrusionValue !== undefined) {
+                    if (animateExtrusionValue !== null) {
                         animateExtrusionValue =
                             typeof animateExtrusionValue === "boolean"
                                 ? animateExtrusionValue
@@ -927,14 +908,15 @@ export class TileGeometryCreator {
                                 : false;
                     }
                     extrusionAnimationEnabled =
-                        animateExtrusionValue !== undefined &&
+                        animateExtrusionValue !== null &&
                         animatedExtrusionHandler.forceEnabled === false
                             ? animateExtrusionValue
                             : animatedExtrusionHandler.enabled;
                 }
 
                 const renderDepthPrePass =
-                    isExtrudedPolygonTechnique(technique) && isRenderDepthPrePassEnabled(technique);
+                    isExtrudedPolygonTechnique(technique) &&
+                    isRenderDepthPrePassEnabled(technique, discreteZoomEnv);
 
                 if (renderDepthPrePass) {
                     const depthPassMesh = createDepthPrePassMesh(object as THREE.Mesh);
@@ -1119,6 +1101,7 @@ export class TileGeometryCreator {
                         outlineTechnique.secondaryColor ?? 0x000000,
                         discreteZoomEnv
                     );
+
                     if (outlineTechnique.secondaryCaps !== undefined) {
                         outlineMaterial.caps = outlineTechnique.secondaryCaps;
                     }
@@ -1144,6 +1127,7 @@ export class TileGeometryCreator {
                             const lineMaterial = mat as SolidLineMaterial;
 
                             const unitFactor =
+                                // tslint:disable-next-line: deprecation
                                 outlineTechnique.metricUnit === "Pixel"
                                     ? mapView.pixelToWorld
                                     : 1.0;
@@ -1174,7 +1158,7 @@ export class TileGeometryCreator {
                                 // hide outline when it's equal or smaller then line to avoid subpixel contour
                                 const lineWidth =
                                     techniqueSecondaryWidth <= techniqueLineWidth &&
-                                    (techniqueOpacity === undefined || techniqueOpacity === 1)
+                                    (techniqueOpacity === null || techniqueOpacity === 1)
                                         ? 0
                                         : techniqueSecondaryWidth;
                                 lineMaterial.lineWidth = lineWidth * unitFactor * 0.5;
@@ -1332,8 +1316,6 @@ export class TileGeometryCreator {
         const { priorities, labelPriorities } = tile.mapView.theme;
 
         decodedTile.techniques.forEach(technique => {
-            const indexedTechnique = technique as IndexedTechnique;
-
             if (
                 isTextTechnique(technique) ||
                 isPoiTechnique(technique) ||
@@ -1341,20 +1323,18 @@ export class TileGeometryCreator {
             ) {
                 // for screen-space techniques the `category` is used to assign
                 // priorities.
-                if (labelPriorities && typeof indexedTechnique._category === "string") {
+                if (labelPriorities && typeof technique._category === "string") {
                     // override the `priority` when the technique uses `category`.
-                    const priority = labelPriorities.indexOf(indexedTechnique._category);
+                    const priority = labelPriorities.indexOf(technique._category);
                     if (priority !== -1) {
                         technique.priority = labelPriorities.length - priority;
                     }
                 }
-            } else if (priorities && indexedTechnique._styleSet !== undefined) {
+            } else if (priorities && technique._styleSet !== undefined) {
                 // Compute the render order based on the style category and styleSet.
                 const computeRenderOrder = (category: string): number | undefined => {
                     const priority = priorities?.findIndex(
-                        entry =>
-                            entry.group === indexedTechnique._styleSet &&
-                            entry.category === category
+                        entry => entry.group === technique._styleSet && entry.category === category
                     );
 
                     return priority !== undefined && priority !== -1
@@ -1362,20 +1342,18 @@ export class TileGeometryCreator {
                         : undefined;
                 };
 
-                if (typeof indexedTechnique._category === "string") {
+                if (typeof technique._category === "string") {
                     // override the renderOrder when the technique is using categories.
-                    const renderOrder = computeRenderOrder(indexedTechnique._category);
+                    const renderOrder = computeRenderOrder(technique._category);
 
                     if (renderOrder !== undefined) {
                         technique.renderOrder = renderOrder;
                     }
                 }
 
-                if (typeof indexedTechnique._secondaryCategory === "string") {
+                if (typeof technique._secondaryCategory === "string") {
                     // override the secondaryRenderOrder when the technique is using categories.
-                    const secondaryRenderOrder = computeRenderOrder(
-                        indexedTechnique._secondaryCategory
-                    );
+                    const secondaryRenderOrder = computeRenderOrder(technique._secondaryCategory);
 
                     if (secondaryRenderOrder !== undefined) {
                         (technique as any).secondaryRenderOrder = secondaryRenderOrder;
@@ -1465,8 +1443,6 @@ export class TileGeometryCreator {
                 geoBox: tile.geoBox
             };
             object.userData = tileDisplacementMap;
-        } else if (isSolidLineTechnique(technique)) {
-            object.userData = srcGeometry.objInfos!;
         } else {
             // Set the feature data for picking with `MapView.intersectMapObjects()` except for
             // solid-line which uses tile-based picking.

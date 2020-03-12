@@ -1,13 +1,18 @@
 /*
- * Copyright (C) 2017-2019 HERE Europe B.V.
+ * Copyright (C) 2017-2020 HERE Europe B.V.
  * Licensed under Apache 2.0, see full license in LICENSE
  * SPDX-License-Identifier: Apache-2.0
  */
 import { GeoCoordinates } from "@here/harp-geoutils";
-import { CopyrightElementHandler, MapView, MapViewEventNames } from "@here/harp-mapview";
-import { APIFormat, OmvDataSource } from "@here/harp-omv-datasource";
+import {
+    CopyrightElementHandler,
+    MapView,
+    MapViewEventNames,
+    MapViewUtils
+} from "@here/harp-mapview";
+import { APIFormat, AuthenticationMethod, OmvDataSource } from "@here/harp-omv-datasource";
 import THREE = require("three");
-import { accessToken } from "../config";
+import { apikey, copyrightInfo } from "../config";
 
 /**
  * The example shows how to render map synchronously within your own render loop.
@@ -64,11 +69,15 @@ export namespace SynchronousRendering {
         });
 
         const omvDataSource = new OmvDataSource({
-            baseUrl: "https://xyz.api.here.com/tiles/herebase.02",
+            baseUrl: "https://vector.hereapi.com/v2/vectortiles/base/mc",
             apiFormat: APIFormat.XYZOMV,
             styleSetName: "tilezen",
-            maxZoomLevel: 17,
-            authenticationCode: accessToken
+            authenticationCode: apikey,
+            authenticationMethod: {
+                method: AuthenticationMethod.QueryString,
+                name: "apikey"
+            },
+            copyrightInfo
         });
         map.addDataSource(omvDataSource);
 
@@ -184,13 +193,13 @@ export namespace SynchronousRendering {
         // Draw popup's connection line
         popup.drawConnectionLine();
 
-        // Set geolocation and camera rotation
-        mapView.setCameraGeolocationAndZoom(
-            state.geoPos,
-            state.zoomLevel,
-            (state.yawDeg += 0.1),
-            state.pitchDeg
-        );
+        state.yawDeg += 0.1;
+        // Set target and camera rotation
+        const distance = MapViewUtils.calculateDistanceFromZoomLevel(mapView, state.zoomLevel);
+        const tilt = state.pitchDeg;
+        const heading = -state.yawDeg;
+
+        mapView.lookAt(state.geoPos, distance, tilt, heading);
 
         // Draw map scene
         mapView.renderSync();

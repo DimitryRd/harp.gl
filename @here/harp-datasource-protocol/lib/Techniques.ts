@@ -25,7 +25,7 @@ import {
 } from "./TechniqueParams";
 
 import { Expr, JsonExpr } from "./Expr";
-import { InterpolatedProperty, InterpolatedPropertyDefinition } from "./InterpolatedPropertyDefs";
+import { InterpolatedPropertyDefinition } from "./InterpolatedPropertyDefs";
 import {
     AttrScope,
     mergeTechniqueDescriptor,
@@ -66,7 +66,7 @@ export type RemoveJsonExpr<T> = T | JsonExpr extends T ? Exclude<T, JsonExpr> : 
  */
 export type MakeTechniqueAttrs<T> = {
     [P in keyof T]: T[P] | JsonExpr extends T[P]
-        ? RemoveInterpolatedPropDef<RemoveJsonExpr<T[P]>> | Expr | InterpolatedProperty
+        ? RemoveInterpolatedPropDef<RemoveJsonExpr<T[P]>> | Expr
         : T[P];
 };
 
@@ -520,13 +520,6 @@ export interface IndexedTechniqueParams {
      * @hidden
      */
     _index: number;
-
-    /**
-     * Unique technique key derived from all dynamic expressions that were input to this particular
-     * technique instance.
-     * @hidden
-     */
-    _key: string;
 
     /**
      * Optimization: Unique [[Technique]] index of [[Style]] from which technique was derived.

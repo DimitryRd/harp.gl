@@ -14,7 +14,7 @@ import {
     Vector3Like,
     webMercatorProjection
 } from "@here/harp-geoutils";
-import { Technique } from "./Techniques";
+import { IndexedTechnique } from "./Techniques";
 import { TileInfo } from "./TileInfo";
 
 /**
@@ -23,7 +23,7 @@ import { TileInfo } from "./TileInfo";
  * metadata describing these buffers.
  */
 export interface DecodedTile {
-    techniques: Technique[];
+    techniques: IndexedTechnique[];
     geometries: Geometry[];
     pathGeometries?: PathGeometry[];
     textPathGeometries?: TextPathGeometry[];
@@ -137,7 +137,7 @@ export enum GeometryType {
  */
 export interface Geometry {
     type: GeometryType;
-    vertexAttributes: BufferAttribute[];
+    vertexAttributes?: BufferAttribute[];
     interleavedVertexAttributes?: InterleavedBufferAttribute[];
     index?: BufferAttribute;
     edgeIndex?: BufferAttribute;

@@ -338,12 +338,13 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
         const worldLines: number[][] = []; // lines in world space.
         const uvs: number[][] = [];
         const offsets: number[][] = [];
-        const { projectedTileBounds } = this.m_decodeInfo;
+        const projectedBoundingBox = this.m_decodeInfo.projectedBoundingBox;
+
         let localLineSegments: number[][]; // lines in target tile space for special dashes.
 
-        const tileWidth = projectedTileBounds.max.x - projectedTileBounds.min.x;
-        const tileHeight = projectedTileBounds.max.y - projectedTileBounds.min.y;
-        const tileSizeInMeters = Math.max(tileWidth, tileHeight);
+        const tileWidth = projectedBoundingBox.extents.x * 2;
+        const tileHeight = projectedBoundingBox.extents.y * 2;
+        const tileSizeWorld = Math.max(tileWidth, tileHeight);
 
         let computeTexCoords: TexCoordsFunction | undefined;
         let texCoordinateType: TextureCoordinateType | undefined;
@@ -572,11 +573,11 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                     // split jagged label paths to keep processing and rendering only those that
                     // have no sharp corners, which would not be rendered anyway.
 
-                    const metersPerPixel = tileSizeInMeters / this.m_decodeInfo.tileSizeOnScreen;
+                    const worldUnitsPerPixel = tileSizeWorld / this.m_decodeInfo.tileSizeOnScreen;
                     const minEstimatedLabelLength =
                         MIN_AVERAGE_CHAR_WIDTH *
                         text.length *
-                        metersPerPixel *
+                        worldUnitsPerPixel *
                         SIZE_ESTIMATION_FACTOR;
                     const minEstimatedLabelLengthSqr =
                         minEstimatedLabelLength * minEstimatedLabelLength;
@@ -1227,6 +1228,7 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
             const featureHeight = context.env.lookup("height") as number;
             const styleSetDefaultHeight = evaluateTechniqueAttr<number>(
                 context,
+                // tslint:disable-next-line: deprecation
                 extrudedPolygonTechnique.defaultHeight
             );
             height =
@@ -1674,16 +1676,18 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                 });
             }
 
+            const vertexAttributes: BufferAttribute[] = [
+                {
+                    name: "position",
+                    buffer: positionElements.buffer,
+                    itemCount: 3,
+                    type: "float"
+                }
+            ];
+
             const geometry: Geometry = {
                 type: meshBuffers.type,
-                vertexAttributes: [
-                    {
-                        name: "position",
-                        buffer: positionElements.buffer as ArrayBuffer,
-                        itemCount: 3,
-                        type: "float"
-                    }
-                ],
+                vertexAttributes,
                 groups: meshBuffers.groups
             };
 
@@ -1695,9 +1699,9 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                         "position buffer"
                 );
 
-                geometry.vertexAttributes.push({
+                vertexAttributes.push({
                     name: "normal",
-                    buffer: normals.buffer as ArrayBuffer,
+                    buffer: normals.buffer,
                     itemCount: 3,
                     type: "float"
                 });
@@ -1711,9 +1715,9 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                         "position buffer"
                 );
 
-                geometry.vertexAttributes.push({
+                vertexAttributes.push({
                     name: "color",
-                    buffer: colors.buffer as ArrayBuffer,
+                    buffer: colors.buffer,
                     itemCount: 3,
                     type: "float"
                 });
@@ -1729,7 +1733,7 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                 );
 
                 const textureCoordinates = new Float32Array(meshBuffers.textureCoordinates);
-                geometry.vertexAttributes.push({
+                vertexAttributes.push({
                     name: "uv",
                     buffer: textureCoordinates.buffer as ArrayBuffer,
                     itemCount: 2,
@@ -1745,7 +1749,7 @@ export class OmvDecodedTileEmitter implements IOmvEmitter {
                         "position buffer"
                 );
 
-                geometry.vertexAttributes.push({
+                vertexAttributes.push({
                     name: "extrusionAxis",
                     buffer: extrusionAxis.buffer as ArrayBuffer,
                     itemCount: 4,

@@ -64,6 +64,7 @@ describe("map-view#Utils", function() {
         const cameraHeight =
             MapViewUtils.calculateDistanceToGroundFromZoomLevel(mapView, xyzView.zoom) /
             Math.cos(THREE.MathUtils.degToRad(xyzView.pitch));
+        // tslint:disable-next-line: deprecation
         const cameraCoordinates = MapViewUtils.getCameraCoordinatesFromTargetCoordinates(
             new GeoCoordinates(xyzView.center[0], xyzView.center[1]),
             cameraHeight,
@@ -103,7 +104,8 @@ describe("map-view#Utils", function() {
                     mapViewMock,
                     distance
                 );
-                expect(zoomLevel).to.be.closeTo(calculatedZoomLevel, 1e-14);
+                // Expect accuracy till 10-th fractional digit (10-th place after comma).
+                expect(zoomLevel).to.be.closeTo(calculatedZoomLevel, 1e-10);
             }
         });
     });
